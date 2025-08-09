@@ -1,5 +1,13 @@
 <p align="right"><a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.eduopinions.com%2Funiversities%2Funiversities-in-ireland%2Fnational-college-of-ireland%2F&psig=AOvVaw01SkHEeJDZ5G7fzDJPBY84&ust=1754854894165000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCMDO8Ia-_o4DFQAAAAAdAAAAABAM">National College of Ireland</a></p>
 
+<p align="right">
+  <a href="https://www.ncirl.ie/agent-portal/international-brand-guidelines">
+    <img src="https://www.ncirl.ie/Portals/0/International/Marketing/NCI_Logo_colour.png" alt="National College of Ireland logo" width="180" />
+  </a>
+  
+</p>
+
+
 ## Deepfake Detection Web Application (Flask)
 
 A production-ready Flask web application for image-based deepfake detection developed as part of a thesis project. The app provides a simple web UI and a form-data HTTP endpoint to classify an input image as Real or Fake using a TensorFlow/Keras model with an attention mechanism.
