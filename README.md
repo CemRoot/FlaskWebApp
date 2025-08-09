@@ -1,4 +1,4 @@
-<p align="right"><a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.eduopinions.com%2Funiversities%2Funiversities-in-ireland%2Fnational-college-of-ireland%2F&psig=AOvVaw01SkHEeJDZ5G7fzDJPBY84&ust=1754854894165000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCMDO8Ia-_o4DFQAAAAAdAAAAABAM">National College of Ireland</a></p>
+<p align="right"><a href="https://www.ncirl.ie/">National College of Ireland</a></p>
 
 <p align="right">
   <a href="https://www.ncirl.ie/agent-portal/international-brand-guidelines">
