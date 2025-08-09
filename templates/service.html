@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Free mobile app HTML landing page template to help you build a great online presence for your app which will convert visitors into users">
+    <meta name="author" content="Inovatik">
+
+    <!-- OG Meta Tags to improve the way the post looks when you share the page on LinkedIn, Facebook, Google+ -->
+	<meta property="og:site_name" content="" /> <!-- website name -->
+	<meta property="og:site" content="" /> <!-- website link -->
+	<meta property="og:title" content=""/> <!-- title shown in the actual shared post -->
+	<meta property="og:description" content="" /> <!-- description shown in the actual shared post -->
+	<meta property="og:image" content="" /> <!-- image link, make sure it's jpg -->
+	<meta property="og:url" content="" /> <!-- where do you want your post to link to -->
+	<meta property="og:type" content="article" />
+
+    <!-- Website Title -->
+    <title>Deepfake Detection — NCI MSCAI Thesis</title>
+    
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i" rel="stylesheet">
+    <link href="../static/css/bootstrap.css" rel="stylesheet">
+    <link href="../static/css/fontawesome-all.css" rel="stylesheet">
+    <link href="../static/css/swiper.css" rel="stylesheet">
+	<link href="../static/css/magnific-popup.css" rel="stylesheet">
+	<link href="../static/css/styles.css" rel="stylesheet">
+	
+	<!-- Favicon  -->
+    <link rel="icon" href="../static/images/favicon.png">
+    <style>
+      /* Layout tweaks to center the content nicely on all screens */
+      header.header { padding-top: 84px; padding-bottom: 84px; }
+      header.header .container .row { justify-content: center; }
+
+      /* Glassmorphism card */
+      .glass { background: rgba(10, 18, 40, 0.45); border: 1px solid rgba(255,255,255,.15); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 14px; }
+      .upload-card { max-width: 860px; margin: 0 auto; }
+      .dropzone { border: 2px dashed rgba(255,255,255,.45); border-radius: 10px; padding: 18px; cursor: pointer; transition: background .2s, border-color .2s; }
+      .dropzone.dragover { background: rgba(255,255,255,.06); border-color: #fff; }
+      .meta { color:#fff; opacity:.95; font-size: 14px; margin-top: 6px; min-height: 22px; }
+      .result-card { max-width: 860px; margin: 18px auto 0; }
+      .title { color:#fff; text-shadow: 0 1px 2px rgba(0,0,0,.35); margin-bottom: 10px; }
+      .subtitle { color:#e9eefc; opacity:.9; }
+    </style>
+</head>
+<body data-spy="scroll" data-target=".fixed-top">
+    
+    <!-- Preloader -->
+	<div class="spinner-wrapper">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div>
+    <!-- end of preloader -->
+    
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark navbar-custom fixed-top">
+        <!-- Text Logo - Use this if you don't have a graphic logo -->
+        <!-- <a class="navbar-brand logo-text page-scroll" href="index.html">Leno</a> -->
+
+        <!-- Brand -->
+        <a class="navbar-brand logo-image" href="{{ url_for('home') }}" style="text-decoration:none; display:flex; align-items:center; gap:10px">
+            <img src="../static/images/logo.svg" alt="Deepfake Detection — NCI MSCAI" style="height:28px">
+            <span style="font-weight:600; letter-spacing:.3px">Deepfake Detection System — NCI MSCAI Thesis</span>
+        </a>
+        
+        <!-- Mobile Menu Toggle Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-awesome fas fa-bars"></span>
+            <span class="navbar-toggler-awesome fas fa-times"></span>
+        </button>
+        <!-- end of mobile menu toggle button -->
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav ml-auto" style="align-items:center; gap:10px">
+                <li class="nav-item">
+                    <a class="btn btn-outline-light btn-sm" href="{{ url_for('home') }}" aria-label="Go to Home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary btn-sm" href="{{ url_for('service') }}" aria-label="Open Detection">Detect Image</a>
+                </li>
+            </ul>
+        </div>
+    </nav> <!-- end of navbar -->
+    <!-- end of navbar -->
+
+
+    <!-- Header -->
+    <header id="header" class="header">
+        <div class="header-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form action="{{ url_for('deep_fake') }}" method="POST" enctype="multipart/form-data" id="detectForm">
+                            <div class="card upload-card shadow-lg glass">
+                              <div class="card-body" style="background: transparent; color:#fff">
+                                <h4 class="card-title title">Upload an image for deepfake detection</h4>
+                                <p class="card-text subtitle" style="margin-bottom:16px">Supported formats: JPG, JPEG, PNG. Recommended size ≤ 5 MB.</p>
+
+                                <div id="dropzone" class="dropzone">
+                                  <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+                                    <label class="btn btn-light btn-sm mb-0" for="exampleFormControlFile1" style="color:#000">Browse image</label>
+                                    <span class="meta" id="file-meta">No file selected</span>
+                                  </div>
+                                  <input class="form-control-file" id="exampleFormControlFile1" name="file" type="file" accept="image/*" required style="display:none">
+                                  <div style="margin-top:10px">
+                                    <img id="preview" src="#" alt="preview" style="display:none; max-width:260px; border-radius:8px; border:1px solid rgba(255,255,255,.2)">
+                                  </div>
+                                </div>
+
+                                <div class="d-flex" style="gap:10px; margin-top:16px">
+                                  <button type="submit" class="btn btn-primary btn-lg" id="detectBtn">
+                                    <i class="fas fa-search"></i> Detect Image
+                                    <span class="spinner-border spinner-border-sm ml-2 d-none" id="loadingSpinner" role="status" aria-hidden="true"></span>
+                                  </button>
+                                  <a class="btn btn-outline-light btn-lg" href="{{ url_for('home') }}">Back to Home</a>
+                                </div>
+                              </div>
+                            </div>
+
+                            {% if error %}
+                              <div class="alert alert-danger result-card glass" role="alert" style="color:#fff">{{ error }}</div>
+                            {% endif %}
+                            {% if outputvalues != "nonoutput" %}
+                            <div class="card result-card shadow glass">
+                              <div class="card-body" style="background: transparent; color:#fff">
+                                <div class="d-flex flex-wrap" style="gap:16px; align-items:flex-start">
+                                  <img src="{{ image_url }}" alt="input img" style="max-width: 320px; border-radius: 8px; border:1px solid rgba(255,255,255,.15)">
+                                  <div>
+                                    {% set is_real = pred_class and pred_class|lower == 'real' %}
+                                    <div style="font-size:18px; margin-bottom:8px">
+                                      Predicted class:
+                                      <span class="badge {{ 'badge-success bg-success' if is_real else 'badge-danger bg-danger' }}" style="font-size:15px; padding:6px 10px">{{ pred_class }}</span>
+                                    </div>
+                                    {% if confidence %}
+                                    <div style="opacity:.9; margin-bottom:6px">Confidence: <b>{{ confidence }}</b></div>
+                                    <div class="progress" style="max-width:280px">
+                                      <div class="progress-bar {{ 'bg-success' if is_real else 'bg-danger' }}" role="progressbar" style="width: {{ confidence }}" aria-valuenow="{{ confidence }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    {% endif %}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div> <!-- end of row -->
+            </div> <!-- end of container -->
+        </div> <!-- end of header-content -->
+    </header> <!-- end of header -->
+    <!-- end of header -->
+
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="footer-col">
+                        <h4>About the Project</h4>
+                        <p>Deepfake Detection System is a master's thesis project developed at the National College of Ireland (MSCAI). It leverages Deep Learning for image forensics and is built with Python, Flask, TensorFlow/Keras and OpenCV.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="footer-col">
+                        <h4>Project Details</h4>
+                        <ul class="list-unstyled li-space-lg" style="margin:0">
+                            <li class="media"><i class="fas fa-square"></i><div class="media-body">Institution: National College of Ireland</div></li>
+                            <li class="media"><i class="fas fa-square"></i><div class="media-body">Programme: MSc in Artificial Intelligence (MSCAI)</div></li>
+                            <li class="media"><i class="fas fa-square"></i><div class="media-body">Student: Cem Koyluoglu</div></li>
+                            <li class="media"><i class="fas fa-square"></i><div class="media-body">Year: 2025</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of footer -->
+
+
+    <!-- Copyright -->
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="p-small" style="margin:0">© 2025 Cem Koyluoglu • National College of Ireland — MSCAI Thesis Project</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of copyright -->
+    
+    	
+    <!-- Scripts -->
+    <script src="../static/js/jquery.min.js"></script> <!-- jQuery for Bootstrap's JavaScript plugins -->
+    <script src="../static/js/popper.min.js"></script> <!-- Popper tooltip library for Bootstrap -->
+    <script src="../static/js/bootstrap.min.js"></script> <!-- Bootstrap framework -->
+    <script src="../static/js/jquery.easing.min.js"></script> <!-- jQuery Easing for smooth scrolling between anchors -->
+    <script src="../static/js/swiper.min.js"></script> <!-- Swiper for image and text sliders -->
+    <script src="../static/js/jquery.magnific-popup.js"></script> <!-- Magnific Popup for lightboxes -->
+    <script src="../static/js/morphext.min.js"></script> <!-- Morphtext rotating text in the header -->
+    <script src="../static/js/validator.min.js"></script> <!-- Validator.js - Bootstrap plugin that validates forms -->
+    <script src="../static/js/scripts.js"></script> <!-- Custom scripts -->
+    <script>
+      (function(){
+        const input = document.getElementById('exampleFormControlFile1');
+        const meta = document.getElementById('file-meta');
+        const preview = document.getElementById('preview');
+        const drop = document.getElementById('dropzone');
+        const form = document.getElementById('detectForm');
+        const btn = document.getElementById('detectBtn');
+        const spinner = document.getElementById('loadingSpinner');
+        if(!input) return;
+
+        function updatePreview(f){
+          if(!f){ meta.textContent='No file selected'; preview.style.display='none'; return; }
+          meta.textContent = `Selected: ${f.name} (${Math.round(f.size/1024)} KB)`;
+          const url = URL.createObjectURL(f);
+          preview.src = url; preview.style.display='inline-block';
+        }
+
+        input.addEventListener('change', function(){
+          const f = input.files && input.files[0];
+          updatePreview(f);
+        });
+
+        ;['dragenter','dragover'].forEach(evt=>drop.addEventListener(evt, e=>{ e.preventDefault(); e.stopPropagation(); drop.classList.add('dragover'); }));
+        ;['dragleave','drop'].forEach(evt=>drop.addEventListener(evt, e=>{ e.preventDefault(); e.stopPropagation(); drop.classList.remove('dragover'); }));
+        drop.addEventListener('drop', e=>{
+          const files = e.dataTransfer.files;
+          if(files && files[0]){ input.files = files; updatePreview(files[0]); }
+        });
+
+        form.addEventListener('submit', ()=>{ if(btn){ spinner.classList.remove('d-none'); btn.setAttribute('disabled','true'); }});
+      })();
+    </script>
+</body>
+</html>

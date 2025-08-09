@@ -1,0 +1,61 @@
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+.python-version
+
+# Environments
+.env
+.venv/
+venv/
+env/
+ENV/
+
+# Packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing
+.pytest_cache/
+.mypy_cache/
+coverage.xml
+.coverage
+
+# IDE
+.vscode/
+.idea/
+
+# Node (if any)
+node_modules/
+
+# Project-specific large/binary artifacts
+model/
+*.h5
+*.hdf5
+*.pkl
+
+dataset/
+static/images/uploadedimage/
+
+# Logs
+logs/
+*.log
