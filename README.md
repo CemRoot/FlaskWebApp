@@ -112,6 +112,109 @@ The `notebooks/` folder contains the Jupyter notebooks used during experimentati
 ### Academic Use
 If you reference this application in your thesis or publications, consider citing your model and training methodology (e.g., EfficientNet variant + attention) and include a short description of preprocessing and evaluation protocol.
 
+### Introduction
+#### Background
+The rise of DeepFake technologies poses significant threats in media authenticity, misinformation, and digital identity misuse. Detecting and classifying DeepFake images is crucial for security, ethical AI use, and building public trust in digital content. This project explores deep learning techniques to accurately differentiate between real and manipulated (fake) images using various CNN architectures.
+
+#### Aim of the Study
+Design, implement, and evaluate deep learning-based models that classify images into Real or Fake with high accuracy, and interpret predictions using attention mechanisms and explainable AI.
+
+#### Research Objectives
+- Preprocess and augment a balanced dataset of real and fake images.
+- Build and compare CNN-based models (CNN, VGG16, Xception, MobileNetV2, EfficientNetB7).
+- Introduce and evaluate a novel attention mechanism integrated with EfficientNetB7.
+- Assess with robust metrics and interpret with confusion matrices and visualizations.
+- Deploy the best model as a Flask web app for real-time predictions.
+
+#### Research Question
+Can attention-augmented deep learning models accurately and robustly classify DeepFake images compared to standard architectures, and how interpretable are these models in explaining the decision-making process?
+
+### Configuration of the System
+- Training used Kaggle Notebook with NVIDIA Tesla T4 or P100-PCIE-16GB GPU. Kaggle helps avoid RAM-related interruptions during long sessions.
+
+#### Development Platform
+- Platform: Kaggle Notebook (GPU access, TensorFlow available, easy sharing/collaboration)
+
+#### Hardware (GPU)
+- 16 GB RAM
+- NVIDIA Tesla T4 or P100 GPU
+- ~50 GB storage
+
+#### Software and Libraries
+
+| Tool | Purpose |
+| --- | --- |
+| Python 3.11 | Programming language |
+| TensorFlow / Keras | Model building and training |
+| OpenCV | Image loading and resizing |
+| scikit-learn | Splitting and evaluation metrics |
+| Matplotlib | Data visualization |
+| Seaborn | Class distribution plots and heatmaps |
+| Plotly | Interactive visualizations |
+| LIME | Model explainability |
+
+### Dataset Collection
+The dataset comprises two classes: Real and Fake, stored in class-specific folders.
+
+- Dataset Source: https://www.kaggle.com/datasets/manjilkarki/deepfake-and-real-images
+- Original Source: https://zenodo.org/record/5528418
+
+Data Summary
+- Image Size: 256×256 JPEG
+- Classes: Real (Authentic), Fake (Manipulated)
+- Structure: Two folders (`Real/`, `Fake/`)
+
+### Project Workflow
+1. Library Installation & Import: install and import OpenCV, TensorFlow/Keras, scikit-learn, etc.
+2. Dataset Loading: load and label images into NumPy arrays.
+3. Preprocessing:
+   - Resize to 128×128
+   - Encode labels with `LabelBinarizer`
+   - Normalize pixel values to [0, 1]
+4. Exploratory Data Analysis:
+   - Display sample images per class
+   - Plot class distributions
+   - Compute pixel statistics
+5. Data Splitting:
+   - Train 80%, Validation 10%, Test 10%
+   - Stratified to keep class balance
+6. Model Training (with EarlyStopping & ReduceLROnPlateau):
+   - CNN (custom baseline)
+   - VGG16 (ImageNet transfer learning)
+   - Xception (transfer learning)
+   - MobileNetV2 (lightweight)
+   - EfficientNetB7 (scalable)
+   - EfficientNetB7 + Attention (novelty)
+7. Hyperparameter Tuning:
+   - Optimizers tried: Adam (best), SGD
+   - Epochs: up to 10 (early stopping)
+   - Batch sizes: 16, 32
+   - Data augmentation: tried; not beneficial in the final setting
+8. Evaluation:
+   - Accuracy and loss curves
+   - Confusion matrix and classification report
+
+Example classification report:
+```text
+precision  recall  f1-score  support
+0    0.96    0.97      0.97     1000
+1    0.97    0.96      0.97     1000
+
+accuracy 0.97 (N=2000)
+macro avg 0.97 0.97 0.97 2000
+weighted avg 0.97 0.97 0.97 2000
+```
+
+### Conclusion
+This repository implements a complete, reproducible pipeline for DeepFake image classification—covering dataset ingestion, preprocessing, stratified splitting (80/10/10), model training with EarlyStopping/ReduceLROnPlateau, and rigorous evaluation with interpretability. Across optimizers and backbones (custom CNN, VGG16, Xception, MobileNetV2, EfficientNetB7, and EfficientNetB7 + Attention), Adam consistently delivered the strongest performance (Accuracy ≈ 0.97; Precision/Recall ≈ 0.96–0.97; F1 ≈ 0.97). LIME and the custom attention module improved interpretability by highlighting discriminative facial regions. Future work: broader cross-domain validation (compression, occlusion, lighting), stronger augmentation/synthetic data, complementary explainability (Grad-CAM/Integrated Gradients), and deployment optimizations (pruning/quantization).
+
+### Screenshots
+Place the following images under `docs/images/` to render them here:
+
+![Home](docs/images/home.png)
+![Detect Real](docs/images/detect-real.png)
+![Detect Fake](docs/images/detect-fake.png)
+
 ---
 
 ## Türkçe Bölüm (Özet ve Kurulum)
@@ -169,6 +272,109 @@ FlaskWebApp/
 - "bad marshal data" hatası: Yanlış Python/bağımlılık. Venv’i 3.11 ile yeniden kurun. Uygulama, tam modeli yükleyemezse mimariyi koddan kurup sadece ağırlıkları yükler.
 - 5000 portu dolu: `lsof -ti :5000 | xargs kill -9` ya da farklı portta çalıştırın.
 - Aynı görsel sorunu: Uygulama benzersiz adlarla kaydediyor; yine de gerekirse sert yenileme (Cmd+Shift+R).
+
+### Giriş
+#### Arka Plan
+DeepFake teknolojilerinin yükselişi; medya doğruluğu, yanlış bilgilendirme ve dijital kimlik kötüye kullanımı açısından ciddi riskler barındırıyor. Gerçek ve sahte (manipüle) görüntülerin ayrıştırılması; güvenlik, etik yapay zekâ ve dijital içerikte toplumsal güven için kritik önemdedir. Bu proje, farklı CNN mimarileri ile gerçek ve sahte görüntüleri yüksek doğrulukla ayırt etmeyi araştırır.
+
+#### Çalışmanın Amacı
+Görüntüleri Real/Fake olarak yüksek doğrulukla sınıflandıran derin öğrenme tabanlı modelleri tasarlamak, uygulamak ve değerlendirmek; tahminleri dikkat (attention) mekanizmaları ve açıklanabilir yapay zekâ ile yorumlamak.
+
+#### Araştırma Hedefleri
+- Dengeli (real/fake) veri kümesinin ön işlenmesi ve artırılması.
+- CNN, VGG16, Xception, MobileNetV2, EfficientNetB7 modellerinin karşılaştırılması.
+- EfficientNetB7 ile entegre yeni bir attention mekanizmasının tanıtımı ve değerlendirilmesi.
+- Sağlam metriklerle değerlendirme; karışıklık matrisi ve görselleştirmelerle yorumlama.
+- En iyi modelin gerçek zamanlı tahmin için Flask web uygulaması olarak yaygınlaştırılması.
+
+#### Araştırma Sorusu
+Attention ile zenginleştirilmiş derin öğrenme modelleri, standart mimarilere kıyasla DeepFake görüntülerini ne kadar doğru ve sağlam sınıflandırabilir? Karar verme süreçleri ne kadar açıklanabilir?
+
+### Sistem Konfigürasyonu
+- Eğitim için Kaggle Notebook üzerinde NVIDIA Tesla T4 veya P100-PCIE-16GB GPU kullanıldı. Kaggle, RAM yetersizliğinden doğan oturum kesintilerini minimize eder.
+
+#### Geliştirme Ortamı
+- Platform: Kaggle Notebook (GPU erişimi, TensorFlow kurulu, paylaşım kolaylığı)
+
+#### Donanım (GPU)
+- 16 GB RAM
+- NVIDIA Tesla T4 veya P100 GPU
+- ~50 GB depolama
+
+#### Yazılım ve Kütüphaneler
+
+| Araç | Amaç |
+| --- | --- |
+| Python 3.11 | Programlama dili |
+| TensorFlow / Keras | Model kurma ve eğitim |
+| OpenCV | Görüntü okuma ve yeniden boyutlandırma |
+| scikit-learn | Veri bölme ve değerlendirme metrikleri |
+| Matplotlib | Veri görselleştirme |
+| Seaborn | Sınıf dağılımı ve ısı haritaları |
+| Plotly | Etkileşimli görselleştirmeler |
+| LIME | Model açıklanabilirliği |
+
+### Veri Kümesi
+Veri kümesi, sınıf klasörleri halinde saklanan iki sınıftan oluşur: Real ve Fake.
+
+- Veri Kaynağı: https://www.kaggle.com/datasets/manjilkarki/deepfake-and-real-images
+- Orijinal Kaynak: https://zenodo.org/record/5528418
+
+Özet
+- Görsel boyutu: 256×256 JPEG
+- Sınıflar: Real (Gerçek), Fake (Manipüle)
+- Yapı: İki klasör (`Real/`, `Fake/`)
+
+### Proje Akışı
+1. Kütüphanelerin kurulumu ve içe aktarımı (OpenCV, TensorFlow/Keras, scikit-learn, vb.)
+2. Veri yükleme: Görsellerin etiketlenip NumPy dizilerine alınması
+3. Ön işleme:
+   - 128×128 yeniden boyutlandırma
+   - `LabelBinarizer` ile etiket kodlama
+   - Piksel değerlerinin [0, 1] aralığına ölçeklenmesi
+4. Keşifsel Veri Analizi (EDA):
+   - Her sınıftan örnek görsellerin gösterimi
+   - Sınıf dağılımlarının grafikleri
+   - Piksel istatistikleri
+5. Veri Bölme:
+   - Eğitim %80, Doğrulama %10, Test %10
+   - Sınıf dengesini korumak için katmanlı (stratified) bölme
+6. Model Eğitimi (EarlyStopping & ReduceLROnPlateau ile):
+   - CNN (özel temel model)
+   - VGG16 (ImageNet transfer öğrenme)
+   - Xception (transfer öğrenme)
+   - MobileNetV2 (hafif model)
+   - EfficientNetB7 (ölçeklenebilir)
+   - EfficientNetB7 + Attention (yenilik)
+7. Hiperparametre Ayarı:
+   - Optimizasyon: Adam (en iyi), SGD
+   - Epok: en fazla 10 (erken durdurma)
+   - Yığın boyutu: 16, 32
+   - Veri artırma: denendi; nihai ayarlarda fayda sağlamadı
+8. Değerlendirme:
+   - Doğruluk ve kayıp eğrileri
+   - Karışıklık matrisi ve sınıflandırma raporu
+
+Örnek sınıflandırma raporu:
+```text
+precision  recall  f1-score  support
+0    0.96    0.97      0.97     1000
+1    0.97    0.96      0.97     1000
+
+accuracy 0.97 (N=2000)
+macro avg 0.97 0.97 0.97 2000
+weighted avg 0.97 0.97 0.97 2000
+```
+
+### Sonuç
+Bu depo; veri alma, ön işleme, katmanlı bölme (80/10/10), EarlyStopping/ReduceLROnPlateau ile eğitim ve açıklanabilirlikle kapsamlı değerlendirmeyi içeren uçtan uca, çoğaltılabilir bir DeepFake sınıflandırma hattı sunar. Denenen omurgalar (özel CNN, VGG16, Xception, MobileNetV2, EfficientNetB7 ve EfficientNetB7 + Attention) ve optimizasyonlar arasında Adam en iyi performansı sağlamıştır (Doğruluk ≈ 0.97; Duyarlılık/Geri Çağırma ≈ 0.96–0.97; F1 ≈ 0.97). LIME ve özel attention modülü, ayrımcı yüz bölgelerini vurgulayarak yorumlanabilirliği artırmıştır. Gelecek işler: alanlar arası genelleme (sıkıştırma, örtülme, ışık değişimi), daha güçlü artırma/sentetik veri, ek açıklanabilirlik yöntemleri (Grad-CAM/Integrated Gradients) ve kaynak kısıtlı ortamlar için prunning/quantization.
+
+### Ekran Görüntüleri
+`docs/images/` altına aşağıdaki dosyaları eklediğinizde bu bölümde görüntülenecektir:
+
+![Ana Sayfa](docs/images/home.png)
+![Gerçek Tahmini](docs/images/detect-real.png)
+![Sahte Tahmini](docs/images/detect-fake.png)
 
 ### References
 1. Agrawal, D.R., Haneef, F., 2025. Eye Blinking Feature Processing Using Convolutional Generative Adversarial Network for Deep Fake Video Detection. Trans. Emerg. Telecommun. Technol. 36, e70083. https://doi.org/10.1002/ett.70083
