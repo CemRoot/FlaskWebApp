@@ -10,56 +10,54 @@
 
 ## Deepfake Detection Web Application (Flask)
 
-This repository contains a Flask web app I built for my thesis to classify images as Real or Fake. It provides a simple web UI and an HTTP endpoint and runs a TensorFlow/Keras model with an attention block.
+This repository contains a Flask web app for classifying images as Real or Fake using a TensorFlow/Keras model with an attention block. It offers a simple web UI and an HTTP endpoint.
 
-### What it does
-- Upload an image from the UI (`/service`) or send an HTTP POST (`/deepfake`)
-- Validates file type (PNG/JPG/JPEG) and resizes to 128×128
-- Runs inference with a Keras model that includes an attention block and GAP rescaling
-- Maps predicted index to label using `model/label_transform.pkl` (falls back to ["Fake", "Real"]) 
-- Saves uploads under `static/images/uploadedimage/` with unique filenames
-
-### Repository Structure
-```
-FlaskWebApp/
-  app.py                     # Flask server and inference logic
-  requirements.txt           # Python dependencies
-  model/                     # Place model files here (not tracked)
-    best_model_effatt.h5     # Trained model weights (required)
-    label_transform.pkl      # Label encoder (required)
-  static/                    # Frontend assets (CSS/JS/images)
-    images/uploadedimage/    # Upload destination (gitignored)
-  templates/                 # Jinja2 templates (index.html, service.html)
-  .gitignore                 # Excludes datasets, models, envs, large binaries
-```
-
-### Prerequisites
-- macOS 12+ (Apple Silicon works)
-- Python 3.11.x
-- A virtual environment is recommended
-
-### Setup
+### TL;DR Quick Start
 ```bash
+# 0) Prereqs: macOS 12+, Python 3.11.x
+
 # 1) Create and activate a virtual environment
 python3.11 -m venv .venv
-source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
 # 2) Install dependencies
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
-# 3) Add model assets (required to run inference)
-# Place files under ./model/
+# 3) Add model assets (required to predict)
+mkdir -p model
+# Copy your trained files into ./model/
 #  - best_model_effatt.h5
 #  - label_transform.pkl
 
-# 4) Run the application
-python app.py
-# App will start at http://127.0.0.1:5000/
+# 4) Run the app
+python app.py  # opens http://127.0.0.1:5000/
+```
+
+### What it does
+- Upload an image from the UI (`/service`) or send an HTTP POST (`/deepfake`).
+- Validates file type (PNG/JPG/JPEG) and resizes to 128×128.
+- Runs inference with a Keras model that includes an attention block and GAP rescaling.
+- Maps predicted index to label using `model/label_transform.pkl` (falls back to ["Fake", "Real"]).
+- Saves uploads under `static/images/uploadedimage/` with unique filenames.
+
+### Repository Structure
+```
+FlaskWebApp/
+  app.py                      # Flask server and inference logic
+  requirements.txt            # Python dependencies
+  model/                      # Place model files here (not tracked)
+    best_model_effatt.h5      # Trained model weights (required)
+    label_transform.pkl       # Label encoder (required)
+  notebooks/                  # Jupyter notebooks used in the thesis (read-only)
+  static/                     # Frontend assets (CSS/JS/images)
+    images/uploadedimage/     # Upload destination (gitignored)
+  templates/                  # Jinja2 templates (index.html, service.html)
+  .gitignore                  # Excludes datasets, models, envs, upload outputs
 ```
 
 ### Usage
-- Web UI: Open `http://127.0.0.1:5000/service`, choose an image (PNG/JPG/JPEG), and submit.
+- Web UI: open `http://127.0.0.1:5000/service`, choose an image (PNG/JPG/JPEG), and submit.
 - Programmatic (HTTP):
 ```bash
 curl -X POST \
@@ -106,7 +104,10 @@ This returns the rendered `service.html` view. The app stores the uploaded image
   source FlaskWebApp/.venv/bin/activate
   ```
 - Same image appears repeatedly:
-  - The app now saves with unique filenames and appends a cache-busting query param. If needed, hard-refresh the page (Cmd+Shift+R).
+  - The app saves with unique filenames and appends a cache-busting query param. If needed, hard-refresh the page (Cmd+Shift+R).
+
+### Notebooks
+The `notebooks/` folder contains the Jupyter notebooks used during experimentation and thesis work. They are not required to run the Flask app but are included for reference and reproducibility.
 
 ### Academic Use
 If you reference this application in your thesis or publications, consider citing your model and training methodology (e.g., EfficientNet variant + attention) and include a short description of preprocessing and evaluation protocol.
@@ -116,6 +117,25 @@ If you reference this application in your thesis or publications, consider citin
 ## Türkçe Bölüm (Özet ve Kurulum)
 
 Bu bölüm, uygulamanın Türkçe özeti ve hızlı kurulum talimatlarını içerir.
+
+### Hızlı Başlangıç
+```bash
+# 1) Sanal ortam oluşturun ve etkinleştirin
+python3.11 -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# 2) Bağımlılıkları yükleyin
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+# 3) Model dosyalarını ekleyin (./model/ altına)
+mkdir -p model
+#  - best_model_effatt.h5
+#  - label_transform.pkl
+
+# 4) Uygulamayı çalıştırın
+python app.py  # http://127.0.0.1:5000/
+```
 
 ### Ne Yapar?
 - Arayüzden (`/service`) ya da HTTP POST (`/deepfake`) ile görüntü yüklenir.
@@ -132,37 +152,10 @@ FlaskWebApp/
   model/
     best_model_effatt.h5
     label_transform.pkl
+  notebooks/
   static/images/uploadedimage/
   templates/
 ```
-
-### Gereksinimler
-- macOS 12+ (Apple Silicon desteklenir)
-- Python 3.11.x
-- Tavsiye: sanal ortam (venv)
-
-### Kurulum
-```bash
-cd FlaskWebApp
-python3.11 -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-
-# Model dosyalarını ekleyin (./model/ altında):
-#  - best_model_effatt.h5
-#  - label_transform.pkl
-
-python app.py  # http://127.0.0.1:5000/
-```
-
-### Kullanım
-- Web arayüzü: `http://127.0.0.1:5000/service`
-- Programatik (HTTP):
-```bash
-curl -X POST -F "file=@/path/to/image.jpg" http://127.0.0.1:5000/deepfake
-```
-Uygulama, yüklenen görseli `static/images/uploadedimage/` altında benzersiz dosya adıyla kaydeder ve tahmini (sınıf + güven) ekranda gösterir.
 
 ### Çıkarım Ayrıntıları
 - OpenCV okuma → 128×128 yeniden boyutlandırma → float32 dizi
