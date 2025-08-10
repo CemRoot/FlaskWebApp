@@ -66,7 +66,7 @@ curl -X POST \
   -F "file=@/path/to/image.jpg" \
   http://127.0.0.1:5000/deepfake
 ```
-This returns the rendered `service.html` view. The app stores the uploaded image at `static/images/uploadedimage/input_image.jpeg` and displays the predicted label with confidence.
+This returns the rendered `service.html` view. The app stores the uploaded image under `static/images/uploadedimage/` with a unique filename (e.g., `upload_<timestamp>_<uuid>.jpeg`) and displays the predicted label with confidence.
 
 ### Inference Details
 - Preprocessing: OpenCV read → resize to 128×128 → convert to float32 array
@@ -79,6 +79,35 @@ This returns the rendered `service.html` view. The app stores the uploaded image
 - Large artifacts like datasets, model binaries, `.venv`, and upload outputs are excluded via `.gitignore`.
 - If model or label files are missing, the app will start but will not be able to produce predictions.
 - For Apple Silicon: the pinned TensorFlow (2.18.0) supports macOS 12+. If you face install issues, ensure you are on Python 3.11 and latest pip.
+
+### Troubleshooting (Setup/Run)
+
+- Python version: use Python 3.11.x only. Create a clean venv in the `FlaskWebApp/` folder.
+  ```bash
+  cd FlaskWebApp
+  python3.11 -m venv .venv
+  source .venv/bin/activate
+  python -m pip install --upgrade pip
+  pip install -r requirements.txt
+  ```
+- VS Code cannot resolve imports (Pylance):
+  - Command Palette → "Python: Select Interpreter" → choose `FlaskWebApp/.venv/bin/python`
+  - Command Palette → "Python: Restart Language Server"
+  - If needed, reload window: "Developer: Reload Window"
+- Model fails to load with "bad marshal data (unknown type code)":
+  - Likely wrong Python version or mismatched TF/Keras. Recreate venv with Python 3.11 and reinstall requirements. The app first tries to load the full H5; if it fails it rebuilds the architecture and loads only the weights automatically.
+- Port 5000 already in use:
+  ```bash
+  lsof -ti :5000 | xargs kill -9  # free the port on macOS
+  # or run on another port:
+  python -c "from app import app; app.run(debug=True, use_reloader=False, port=5001)"
+  ```
+- Conda conflicts with venv: deactivate conda before activating `.venv`.
+  ```bash
+  conda deactivate || true
+  source FlaskWebApp/.venv/bin/activate
+  ```
+- Image preview shows an old image: the app saves with unique filenames and adds a cache-busting query param; hard refresh (Cmd+Shift+R) if needed.
 
 ### Academic Use
 If you reference this application in your thesis or publications, consider citing your model and training methodology (e.g., EfficientNet variant + attention) and include a short description of preprocessing and evaluation protocol.
@@ -143,7 +172,7 @@ curl -X POST \
   -F "file=@/path/to/image.jpg" \
   http://127.0.0.1:5000/deepfake
 ```
-Bu istek `service.html` sayfasını döndürür. Yüklenen görüntü `static/images/uploadedimage/input_image.jpeg` olarak kaydedilir; tahmin sonucu ve güven değeri ekranda gösterilir.
+Bu istek `service.html` sayfasını döndürür. Yüklenen görüntü `static/images/uploadedimage/` altında benzersiz bir adla (örn. `upload_<timestamp>_<uuid>.jpeg`) kaydedilir; tahmin sınıfı ve güven değeri ekranda gösterilir.
 
 ### Çıkarım Ayrıntıları
 - Ön İşleme: OpenCV okuma → 128×128 yeniden boyutlandırma → float32 diziye çevirme
