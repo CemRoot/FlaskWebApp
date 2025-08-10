@@ -91,102 +91,31 @@ This returns the rendered `service.html` view. The app stores the uploaded image
   ```
 - VS Code import errors (Pylance):
   - Cmd+Shift+P → Python: Select Interpreter → `FlaskWebApp/.venv/bin/python`
-  - Cmd+Shift+P → Python: Restart Language Server → (gerekirse) Developer: Reload Window
+  - Cmd+Shift+P → Python: Restart Language Server → (if needed) Developer: Reload Window
 - Model load error “bad marshal data (unknown type code)”:
-  - Yanlış Python sürümü/bağımlılık eşleşmesi. Venv’i Python 3.11 ile yeniden kurun. Uygulama tam modeli yüklemeyi dener; olmazsa mimariyi koddan kurup sadece ağırlıkları yükler.
-- Port 5000 dolu:
+  - Likely wrong Python version/dependency mismatch. Recreate the venv with Python 3.11. The app first attempts to load the full H5 model; if that fails, it rebuilds the architecture in code and loads weights only.
+- Port 5000 in use:
   ```bash
   lsof -ti :5000 | xargs kill -9
-  # veya farklı portta çalıştırın
+  # or run on another port
   python -c "from app import app; app.run(debug=True, use_reloader=False, port=5001)"
   ```
-- Conda çakışması:
+- Conda conflicts:
   ```bash
   conda deactivate || true
   source FlaskWebApp/.venv/bin/activate
   ```
-- Aynı resim görünüyor:
-  - Uygulama artık benzersiz dosya adlarıyla kaydediyor ve URL’e cache-bust ekliyor. Gerekirse sert yenileme (Cmd+Shift+R).
+- Same image appears repeatedly:
+  - The app now saves with unique filenames and appends a cache-busting query param. If needed, hard-refresh the page (Cmd+Shift+R).
 
 ### Academic Use
 If you reference this application in your thesis or publications, consider citing your model and training methodology (e.g., EfficientNet variant + attention) and include a short description of preprocessing and evaluation protocol.
 
 ---
 
-## Derin Sahte (Deepfake) Tespit Web Uygulaması (Flask)
+## Turkish Summary
 
-Bu depo, bir tez çalışması kapsamında geliştirilen, görüntü tabanlı derin sahte tespiti yapan üretim seviyesinde bir Flask web uygulamasını içerir. Uygulama, basit bir web arayüzü ve form-data HTTP uç noktası ile bir görüntüyü Gerçek (Real) veya Sahte (Fake) olarak sınıflandırır. Model, TensorFlow/Keras ve dikkat (attention) mekanizması kullanır.
-
-### Öne Çıkan Özellikler
-- Arayüz (`/service`) veya HTTP POST (`/deepfake`) ile görüntü yükleme
-- Girdi doğrulama (PNG/JPG/JPEG), otomatik 128×128 yeniden boyutlandırma
-- Dikkat bloğu ve GAP yeniden ölçekleme ile TensorFlow/Keras çıkarım
-- `model/label_transform.pkl` ile etiket eşleme (["Fake", "Real"] geri dönüş değeri)
-- Temiz hata yönetimi ve belirli bir yükleme kayıt yolu
-
-### Depo Yapısı
-```
-FlaskWebApp/
-  app.py                     # Flask sunucu ve çıkarım mantığı
-  requirements.txt           # Python bağımlılıkları
-  model/                     # Model dosyaları burada (takip dışı)
-    best_model_effatt.h5     # Eğitilmiş model ağırlıkları (gerekli)
-    label_transform.pkl      # Etiket kodlayıcı (gerekli)
-  static/                    # Arayüz varlıkları (CSS/JS/görseller)
-    images/uploadedimage/    # Yükleme klasörü (gitignore)
-  templates/                 # Jinja2 şablonları (index.html, service.html)
-  .gitignore                 # Veri, model, ortam ve büyük dosyaları hariç tutar
-```
-
-### Gereksinimler
-- macOS 12+ (Apple Silicon desteklenir)
-- Python 3.11.x
-- Öneri: sanal ortam kullanımı
-
-### Kurulum
-```bash
-# 1) Sanal ortam oluşturma ve etkinleştirme
-python3.11 -m venv .venv
-source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
-
-# 2) Bağımlılıkların kurulumu
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-
-# 3) Model dosyalarını ekleme (çıkarım için zorunlu)
-# ./model/ altına kopyalayın:
-#  - best_model_effatt.h5
-#  - label_transform.pkl
-
-# 4) Uygulamayı çalıştırma
-python app.py
-# Uygulama http://127.0.0.1:5000/ adresinde çalışır
-```
-
-### Kullanım
-- Web Arayüzü: `http://127.0.0.1:5000/service` adresini açın, bir resim (PNG/JPG/JPEG) seçin ve gönderin.
-- Programatik (HTTP):
-```bash
-curl -X POST \
-  -F "file=@/path/to/image.jpg" \
-  http://127.0.0.1:5000/deepfake
-```
-Bu istek `service.html` sayfasını döndürür. Yüklenen görüntü `static/images/uploadedimage/` altında benzersiz bir adla (örn. `upload_<timestamp>_<uuid>.jpeg`) kaydedilir; tahmin sınıfı ve güven değeri ekranda gösterilir.
-
-### Çıkarım Ayrıntıları
-- Ön İşleme: OpenCV okuma → 128×128 yeniden boyutlandırma → float32 diziye çevirme
-- Model: TensorFlow/Keras (H5) + `custom_objects`:
-  - `attention_block(features, depth)`
-  - `RescaleGAP([gap_feat, gap_mask]) = gap_feat / gap_mask`
-- Etiketler: Varsayılan olarak `["Fake", "Real"]`; mevcutsa `model/label_transform.pkl` kullanılır.
-
-### Notlar
-- Veri setleri, model ikili dosyaları, `.venv` ve yükleme çıktıları `.gitignore` ile hariç tutulmuştur.
-- Model veya etiket dosyaları eksikse uygulama tahmin üretemez.
-- Apple Silicon için: Sabitlenmiş TensorFlow (2.18.0) macOS 12+ ile uyumludur. Kurulum hatası yaşarsanız Python 3.11 ve güncel pip kullandığınızdan emin olun.
-
-### Akademik Kullanım
-Bu uygulamayı tezinizde veya yayınlarınızda referans gösterecekseniz, model ve eğitim metodolojinizi (örn. EfficientNet türevi + attention) ve ön işleme/evaluasyon ayrıntılarınızı kısaca belirtmeniz önerilir.
+For Turkish-speaking readers, a brief summary of the app and setup was previously included here. To keep the English README concise and consistent, that content has been moved to a separate section or can be maintained in a localized README if needed.
 
 ### References
 1. Agrawal, D.R., Haneef, F., 2025. Eye Blinking Feature Processing Using Convolutional Generative Adversarial Network for Deep Fake Video Detection. Trans. Emerg. Telecommun. Technol. 36, e70083. https://doi.org/10.1002/ett.70083
