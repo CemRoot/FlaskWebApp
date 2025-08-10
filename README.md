@@ -113,9 +113,69 @@ If you reference this application in your thesis or publications, consider citin
 
 ---
 
-## Turkish Summary
+## Türkçe Bölüm (Özet ve Kurulum)
 
-For Turkish-speaking readers, a brief summary of the app and setup was previously included here. To keep the English README concise and consistent, that content has been moved to a separate section or can be maintained in a localized README if needed.
+Bu bölüm, uygulamanın Türkçe özeti ve hızlı kurulum talimatlarını içerir.
+
+### Ne Yapar?
+- Arayüzden (`/service`) ya da HTTP POST (`/deepfake`) ile görüntü yüklenir.
+- Dosya türü doğrulanır (PNG/JPG/JPEG) ve 128×128 boyutuna getirilir.
+- Dikkat (attention) bloğu içeren Keras modeli ile tahmin yapılır.
+- `model/label_transform.pkl` varsa etiket eşleme buradan yapılır; yoksa varsayılan sıra ["Fake", "Real"] kullanılır.
+- Yüklenen görseller `static/images/uploadedimage/` altına benzersiz adlarla kaydedilir.
+
+### Depo Yapısı
+```
+FlaskWebApp/
+  app.py
+  requirements.txt
+  model/
+    best_model_effatt.h5
+    label_transform.pkl
+  static/images/uploadedimage/
+  templates/
+```
+
+### Gereksinimler
+- macOS 12+ (Apple Silicon desteklenir)
+- Python 3.11.x
+- Tavsiye: sanal ortam (venv)
+
+### Kurulum
+```bash
+cd FlaskWebApp
+python3.11 -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+# Model dosyalarını ekleyin (./model/ altında):
+#  - best_model_effatt.h5
+#  - label_transform.pkl
+
+python app.py  # http://127.0.0.1:5000/
+```
+
+### Kullanım
+- Web arayüzü: `http://127.0.0.1:5000/service`
+- Programatik (HTTP):
+```bash
+curl -X POST -F "file=@/path/to/image.jpg" http://127.0.0.1:5000/deepfake
+```
+Uygulama, yüklenen görseli `static/images/uploadedimage/` altında benzersiz dosya adıyla kaydeder ve tahmini (sınıf + güven) ekranda gösterir.
+
+### Çıkarım Ayrıntıları
+- OpenCV okuma → 128×128 yeniden boyutlandırma → float32 dizi
+- Model H5 formatında yüklenir; `custom_objects` içinde:
+  - `attention_block(features, depth)`
+  - `RescaleGAP([gap_feat, gap_mask]) = gap_feat / gap_mask`
+
+### Sorun Giderme (Kısa)
+- Python sürümü 3.11 olmalı. Venv’i bu sürümle oluşturun ve `requirements.txt` kurun.
+- VS Code import hataları: Cmd+Shift+P → Python: Select Interpreter → `FlaskWebApp/.venv/bin/python`, ardından Python: Restart Language Server.
+- "bad marshal data" hatası: Yanlış Python/bağımlılık. Venv’i 3.11 ile yeniden kurun. Uygulama, tam modeli yükleyemezse mimariyi koddan kurup sadece ağırlıkları yükler.
+- 5000 portu dolu: `lsof -ti :5000 | xargs kill -9` ya da farklı portta çalıştırın.
+- Aynı görsel sorunu: Uygulama benzersiz adlarla kaydediyor; yine de gerekirse sert yenileme (Cmd+Shift+R).
 
 ### References
 1. Agrawal, D.R., Haneef, F., 2025. Eye Blinking Feature Processing Using Convolutional Generative Adversarial Network for Deep Fake Video Detection. Trans. Emerg. Telecommun. Technol. 36, e70083. https://doi.org/10.1002/ett.70083
