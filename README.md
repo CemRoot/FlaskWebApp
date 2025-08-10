@@ -1,5 +1,3 @@
-<p align="right"><a href="https://www.ncirl.ie/">National College of Ireland</a></p>
-
 <p align="right">
   <a href="https://www.ncirl.ie/agent-portal/international-brand-guidelines">
     <img src="https://www.ncirl.ie/Portals/0/International/Marketing/NCI_Logo_colour.png" alt="National College of Ireland logo" width="180" />
@@ -166,18 +164,32 @@ Data Summary
 
 ### Project Workflow
 1. Library Installation & Import: install and import OpenCV, TensorFlow/Keras, scikit-learn, etc.
+<img width="799" height="991" alt="image" src="https://github.com/user-attachments/assets/5b0f0f8a-c873-4ae2-a3c8-b07955c96cad" />
+<img width="1618" height="673" alt="image" src="https://github.com/user-attachments/assets/14605004-b4f5-42ae-ad12-28e22c711a42" />
+
 2. Dataset Loading: load and label images into NumPy arrays.
+<img width="1569" height="1112" alt="image" src="https://github.com/user-attachments/assets/cd28d259-0400-40d4-9870-c56ef550a5a9" />
+
 3. Preprocessing:
    - Resize to 128×128
    - Encode labels with `LabelBinarizer`
    - Normalize pixel values to [0, 1]
+<img width="1623" height="790" alt="image" src="https://github.com/user-attachments/assets/3d131c23-5f52-4e23-84a7-ad565c3fc21b" />
+<img width="1584" height="557" alt="image" src="https://github.com/user-attachments/assets/44aa7a9b-6478-4be9-9fc5-fd9b5739e0d8" />
+<img width="1584" height="557" alt="image" src="https://github.com/user-attachments/assets/78e2a80b-b8d6-4fdc-922d-0885cae06046" />
+
 4. Exploratory Data Analysis:
    - Display sample images per class
    - Plot class distributions
    - Compute pixel statistics
+<img width="1586" height="867" alt="image" src="https://github.com/user-attachments/assets/586bb451-a52f-4aab-8bdd-a4605c08c053" />
+<img width="1629" height="966" alt="image" src="https://github.com/user-attachments/assets/e04e2644-fd74-48f1-93c6-8986d27a74a0" />
+
 5. Data Splitting:
    - Train 80%, Validation 10%, Test 10%
    - Stratified to keep class balance
+<img width="1614" height="518" alt="image" src="https://github.com/user-attachments/assets/908c3d60-3331-4c43-a267-32bff45d0fca" />
+
 6. Model Training (with EarlyStopping & ReduceLROnPlateau):
    - CNN (custom baseline)
    - VGG16 (ImageNet transfer learning)
@@ -185,14 +197,21 @@ Data Summary
    - MobileNetV2 (lightweight)
    - EfficientNetB7 (scalable)
    - EfficientNetB7 + Attention (novelty)
+<img width="1614" height="660" alt="image" src="https://github.com/user-attachments/assets/f1dafc97-122b-4e45-9b63-9d8165d279c8" />
+<img width="1600" height="1752" alt="image" src="https://github.com/user-attachments/assets/c6f9bc5e-a778-4f41-bab7-3dc25cd5a441" />
+
 7. Hyperparameter Tuning:
    - Optimizers tried: Adam (best), SGD
    - Epochs: up to 10 (early stopping)
    - Batch sizes: 16, 32
    - Data augmentation: tried; not beneficial in the final setting
+<img width="1600" height="1752" alt="image" src="https://github.com/user-attachments/assets/167ca12a-8fc4-4fb8-89a5-a4ac67d35119" />
+
 8. Evaluation:
    - Accuracy and loss curves
    - Confusion matrix and classification report
+<img width="576" height="455" alt="image" src="https://github.com/user-attachments/assets/ba82a8d1-1440-4831-946b-c204fa70c878" />
+<img width="976" height="506" alt="image" src="https://github.com/user-attachments/assets/e3cf8f51-3e8f-40ca-b962-e86362b37823" />
 
 Example classification report:
 ```text
@@ -211,9 +230,12 @@ This repository implements a complete, reproducible pipeline for DeepFake image 
 ### Screenshots
 Place the following images under `docs/images/` to render them here:
 
-![Home](docs/images/home.png)
-![Detect Real](docs/images/detect-real.png)
-![Detect Fake](docs/images/detect-fake.png)
+<img width="2546" height="1199" alt="image" src="https://github.com/user-attachments/assets/2c2b4f83-edda-4fd9-81a4-29198247ee36" />
+
+<img width="2544" height="1111" alt="image" src="https://github.com/user-attachments/assets/a9989980-1a68-4c1a-9973-204742040446" />
+
+<img width="2545" height="1177" alt="image" src="https://github.com/user-attachments/assets/83bfc402-b1a6-4df9-889f-625cb123651e" />
+
 
 ---
 
@@ -372,9 +394,11 @@ Bu depo; veri alma, ön işleme, katmanlı bölme (80/10/10), EarlyStopping/Redu
 ### Ekran Görüntüleri
 `docs/images/` altına aşağıdaki dosyaları eklediğinizde bu bölümde görüntülenecektir:
 
-![Ana Sayfa](docs/images/home.png)
-![Gerçek Tahmini](docs/images/detect-real.png)
-![Sahte Tahmini](docs/images/detect-fake.png)
+<img width="2546" height="1199" alt="image" src="https://github.com/user-attachments/assets/2c2b4f83-edda-4fd9-81a4-29198247ee36" />
+
+<img width="2544" height="1111" alt="image" src="https://github.com/user-attachments/assets/a9989980-1a68-4c1a-9973-204742040446" />
+
+<img width="2545" height="1177" alt="image" src="https://github.com/user-attachments/assets/83bfc402-b1a6-4df9-889f-625cb123651e" />
 
 ### References
 1. Agrawal, D.R., Haneef, F., 2025. Eye Blinking Feature Processing Using Convolutional Generative Adversarial Network for Deep Fake Video Detection. Trans. Emerg. Telecommun. Technol. 36, e70083. https://doi.org/10.1002/ett.70083
